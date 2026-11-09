@@ -8,17 +8,31 @@ on:
 
 jobs:
   check:
-    name: 链接、图片与规范检查
+    name: 链接与规范检查
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
       - name: 检查相对链接与图片引用
-        run: python 脚本/check_links.py .
+        run: |
+          fail=0
+          while IFS= read -r file; do
+            dir=$(dirname "$file")
+            # 提取 [text](path) 与 ![alt](path) 中的本地路径
+            while IFS= read -r tgt; do
+              case "$tgt" in
+                http*|mailto:*|tel:*|"#"*|"") continue ;;
+              esac
+              # 去掉锚点
+              path="${tgt%%#*}"
+              [ -z "$path" ] && continue
+              if [ ! -e "$dir/$path" ]; then
+                echo "::error file=$file::链接目标不存在 -> $tgt"
+                fail=1
+              fi
+            done < <(grep -oP '\]\(\K[^)]+' "$file" 2>/dev/null || true)
+          done < <(find . -name '*.md' -not -path './.git/*')
+          exit $fail
 
       - name: 检查单文件体积
         run: |
@@ -37,6 +51,9 @@ jobs:
         run: |
           fail=0
           while IFS= read -r f; do
+            case "$f" in
+              ./README.md) continue ;;
+            esac
             if ! head -1 "$f" | grep -q '^---$'; then
               echo "::error file=$f::缺少 front matter"
               fail=1
@@ -48,7 +65,7 @@ jobs:
                 fail=1
               fi
             done
-          done < <(find 文档 -name '*.md')
+          done < <(find . -name '*.md' -not -path './.git/*')
           exit $fail
 
       - name: 检查图片命名规范
@@ -56,15 +73,13 @@ jobs:
           fail=0
           while IFS= read -r f; do
             name=$(basename "$f")
-            # 图片文件名须为小写英文，不含中文与空格
             if echo "$name" | grep -qP '[^\x00-\x7F]|[A-Z]| '; then
               echo "::error file=$f::图片文件名须为小写英文，例如 01-architecture-overview.png"
               fail=1
             fi
-            # 单张图片超过 800KB 提示（不阻断，仅提醒）
             size=$(stat -c%s "$f")
             if [ "$size" -gt $((800 * 1024)) ]; then
-              echo "::warning file=$f::图片 $((size / 1024))KB 偏大，建议用 脚本/compress_images.py 压缩"
+              echo "::warning file=$f::图片 $((size / 1024))KB 偏大，建议压缩到 800KB 以内"
             fi
           done < <(find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) -not -path './.git/*')
           exit $fail
