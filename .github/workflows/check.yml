@@ -1,4 +1,4 @@
-name: check
+name: 文档检查
 
 on:
   push:
@@ -7,62 +7,36 @@ on:
   workflow_dispatch:
 
 jobs:
-  links:
-    name: 死链与图片检查
+  check:
+    name: 链接、图片与规范检查
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: 检查 Markdown 相对链接
-        uses: lycheeverse/lychee-action@v2
+      - uses: actions/setup-python@v5
         with:
-          # 只校验仓库内相对路径，外部链接单独一步处理
-          args: >-
-            --no-progress
-            --offline
-            --include-fragments
-            './**/*.md'
-          fail: true
+          python-version: "3.12"
 
-      - name: 检查图片引用是否都存在
-        run: |
-          set -e
-          fail=0
-          while IFS= read -r file; do
-            dir=$(dirname "$file")
-            # 提取 ![alt](path) 形式的图片引用；用进程替换避免子 shell 丢失 fail
-            while IFS= read -r img; do
-              case "$img" in
-                http*|"") continue ;;
-              esac
-              if [ ! -f "$dir/$img" ]; then
-                echo "::error file=$file::图片不存在 -> $img"
-                fail=1
-              fi
-            done < <(grep -oP '(?<=\]\()[^)]+\.(png|jpg|jpeg|gif|webp|svg)(?=\))' "$file" 2>/dev/null || true)
-          done < <(find . -name '*.md' -not -path './.git/*')
-          exit $fail
+      - name: 检查相对链接与图片引用
+        run: python 脚本/check_links.py .
 
       - name: 检查单文件体积
         run: |
-          set -e
+          fail=0
           limit=$((100 * 1024 * 1024))
-          found=0
           while IFS= read -r f; do
             size=$(stat -c%s "$f")
             if [ "$size" -gt "$limit" ]; then
-              echo "::error file=$f::文件超过 100MB，无法推送，请移至 Releases"
-              found=1
+              echo "::error file=$f::文件超过 100MB，GitHub 会拒绝推送，请移至 Releases"
+              fail=1
             fi
-          done < <(find . -type f -not -path './.git/*' -size +99M)
-          exit $found
+          done < <(find . -type f -not -path './.git/*')
+          exit $fail
 
       - name: 检查 front matter
         run: |
-          set -e
           fail=0
-          for f in $(find docs -name '*.md'); do
-            # README 索引页也要求 front matter，与正文页一致
+          while IFS= read -r f; do
             if ! head -1 "$f" | grep -q '^---$'; then
               echo "::error file=$f::缺少 front matter"
               fail=1
@@ -74,5 +48,23 @@ jobs:
                 fail=1
               fi
             done
-          done
+          done < <(find 文档 -name '*.md')
+          exit $fail
+
+      - name: 检查图片命名规范
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            name=$(basename "$f")
+            # 图片文件名须为小写英文，不含中文与空格
+            if echo "$name" | grep -qP '[^\x00-\x7F]|[A-Z]| '; then
+              echo "::error file=$f::图片文件名须为小写英文，例如 01-architecture-overview.png"
+              fail=1
+            fi
+            # 单张图片超过 800KB 提示（不阻断，仅提醒）
+            size=$(stat -c%s "$f")
+            if [ "$size" -gt $((800 * 1024)) ]; then
+              echo "::warning file=$f::图片 $((size / 1024))KB 偏大，建议用 脚本/compress_images.py 压缩"
+            fi
+          done < <(find . -type f \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' \) -not -path './.git/*')
           exit $fail
