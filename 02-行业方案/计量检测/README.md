@@ -53,7 +53,7 @@ keywords:
 
 ## 与 LIMS 的关系
 
-这是客户最常问的问题，需要明确说清：**Wyn 不替代 LIMS，也不要求改造 LIMS。**
+这是采用这个方案前最需要弄清的一点：**Wyn 不替代 LIMS，也不要求改造 LIMS。**
 
 - LIMS 继续管业务流的发起、审批与归档，它是记录系统（system of record）
 - Wyn 从 LIMS 只读取数据，不写入业务表，不改变 LIMS 的运行逻辑
