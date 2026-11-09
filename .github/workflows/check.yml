@@ -1,0 +1,78 @@
+name: check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  links:
+    name: 死链与图片检查
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 检查 Markdown 相对链接
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # 只校验仓库内相对路径，外部链接单独一步处理
+          args: >-
+            --no-progress
+            --offline
+            --include-fragments
+            './**/*.md'
+          fail: true
+
+      - name: 检查图片引用是否都存在
+        run: |
+          set -e
+          fail=0
+          while IFS= read -r file; do
+            dir=$(dirname "$file")
+            # 提取 ![alt](path) 形式的图片引用；用进程替换避免子 shell 丢失 fail
+            while IFS= read -r img; do
+              case "$img" in
+                http*|"") continue ;;
+              esac
+              if [ ! -f "$dir/$img" ]; then
+                echo "::error file=$file::图片不存在 -> $img"
+                fail=1
+              fi
+            done < <(grep -oP '(?<=\]\()[^)]+\.(png|jpg|jpeg|gif|webp|svg)(?=\))' "$file" 2>/dev/null || true)
+          done < <(find . -name '*.md' -not -path './.git/*')
+          exit $fail
+
+      - name: 检查单文件体积
+        run: |
+          set -e
+          limit=$((100 * 1024 * 1024))
+          found=0
+          while IFS= read -r f; do
+            size=$(stat -c%s "$f")
+            if [ "$size" -gt "$limit" ]; then
+              echo "::error file=$f::文件超过 100MB，无法推送，请移至 Releases"
+              found=1
+            fi
+          done < <(find . -type f -not -path './.git/*' -size +99M)
+          exit $found
+
+      - name: 检查 front matter
+        run: |
+          set -e
+          fail=0
+          for f in $(find docs -name '*.md'); do
+            # README 索引页也要求 front matter，与正文页一致
+            if ! head -1 "$f" | grep -q '^---$'; then
+              echo "::error file=$f::缺少 front matter"
+              fail=1
+              continue
+            fi
+            for key in title description; do
+              if ! sed -n '2,/^---$/p' "$f" | grep -q "^${key}:"; then
+                echo "::error file=$f::front matter 缺少 ${key}"
+                fail=1
+              fi
+            done
+          done
+          exit $fail

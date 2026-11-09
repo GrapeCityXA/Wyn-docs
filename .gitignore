@@ -1,0 +1,35 @@
+# 大型二进制文件：改走 GitHub Releases
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+
+# 原始 Office 文件（方案与介绍的原件）
+# 若某份文件确实需要进仓库，用 git add -f 强制添加
+*.pptx
+*.ppt
+*.docx
+*.doc
+*.xlsx
+*.xls
+
+# 大体积 PDF：帮助文档单个超 100MB，GitHub 会拒绝推送
+*.pdf
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 图片压缩脚本产生的临时文件
+*.png.tmp
