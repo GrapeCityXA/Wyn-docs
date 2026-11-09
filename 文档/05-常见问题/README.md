@@ -19,6 +19,7 @@ keywords:
 
 | 问题 | 文件 |
 | --- | --- |
+| 统计报表和仪表板有什么区别，我该用哪个？ | [q-report-vs-dashboard.md](q-report-vs-dashboard.md) |
 | Wyn 可以私有化部署吗？ | [q-on-premise.md](q-on-premise.md) |
 | 嵌入式集成需要改我的产品代码吗？ | [q-embedding-code-change.md](q-embedding-code-change.md) |
 
@@ -46,6 +47,13 @@ keywords:
 - 数据量大时查询慢怎么办？
 - 能否直接连数据仓库而不是先把数据复制过来？
 - 支持实时数据吗，延迟多大？
+
+### 报表
+
+- 统计报表能导出 Excel 吗，格式会不会乱？
+- 支持套打吗，能不能用现有的印刷单据？
+- 报表的复杂表头和多级汇总能做吗？
+- 报表能定时自动发给指定的人吗？
 
 ### 授权与服务
 

@@ -41,17 +41,17 @@ keywords:
 
 ### 数据分析人员
 
-| 主题 | 说明 | 在线地址 |
-| --- | --- | --- |
-| 数据准备 | 数据源、数据集、数据建模 | [data-preparation](https://www.grapecity.com.cn/solutions/wyn/help/docs/data-preparation) |
-| 数据连接 | 支持的数据源类型与连接配置 | [data-connection](https://www.grapecity.com.cn/solutions/wyn/help/docs/data-connection) |
-| 创建仪表板 | 可视化设计、组件配置、布局 | [create-dashboard](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard) |
-| 使用仪表板 | 筛选、联动、钻取等消费侧操作 | [create-dashboard/use-dashboard](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard/use-dashboard) |
-| 可视化插件 | 自定义可视化组件的开发与接入 | [create-dashboard/visual/cv](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard/visual/cv) |
-| 创建报表 | 类 Excel 报表设计与表达式 | [create-report](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-report) |
-| 使用报表 | 报表查看、导出、打印 | [create-report/report-usage](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-report/report-usage) |
-| AI 对话式分析 | 自然语言问数的使用与配置 | [AI-conversational-analysis](https://www.grapecity.com.cn/solutions/wyn/help/docs/AI-conversational-analysis) |
-| 数据填报应用 | 填报模板、校验、审批 | [input-form](https://www.grapecity.com.cn/solutions/wyn/help/docs/input-form) |
+| 主题 | 说明 | 本仓库内容 | 在线地址 |
+| --- | --- | --- | --- |
+| 数据准备 | 数据源、数据集、数据建模 | — | [data-preparation](https://www.grapecity.com.cn/solutions/wyn/help/docs/data-preparation) |
+| 数据连接 | 支持的数据源类型与连接配置 | — | [data-connection](https://www.grapecity.com.cn/solutions/wyn/help/docs/data-connection) |
+| 创建仪表板 | 可视化设计、组件配置、布局 | [可视化与大屏](../01-产品能力/可视化与大屏/README.md) | [create-dashboard](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard) |
+| 使用仪表板 | 筛选、联动、钻取等消费侧操作 | [可视化与大屏](../01-产品能力/可视化与大屏/README.md) | [create-dashboard/use-dashboard](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard/use-dashboard) |
+| 可视化插件 | 自定义可视化组件的开发与接入 | — | [create-dashboard/visual/cv](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard/visual/cv) |
+| 创建报表 | 类 Excel 报表设计与表达式 | [统计报表](../01-产品能力/统计报表/README.md) | [create-report](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-report) |
+| 使用报表 | 报表查看、导出、打印 | [统计报表](../01-产品能力/统计报表/README.md) | [create-report/report-usage](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-report/report-usage) |
+| AI 对话式分析 | 自然语言问数的使用与配置 | [AI 问数](../01-产品能力/AI问数/README.md) | [AI-conversational-analysis](https://www.grapecity.com.cn/solutions/wyn/help/docs/AI-conversational-analysis) |
+| 数据填报应用 | 填报模板、校验、审批 | [在线填报](../01-产品能力/在线填报/README.md) | [input-form](https://www.grapecity.com.cn/solutions/wyn/help/docs/input-form) |
 
 ### 系统与集成
 
@@ -72,6 +72,7 @@ keywords:
 | --- | --- | --- |
 | 新手 | [产品概览](https://www.grapecity.com.cn/solutions/wyn/help/docs/products-overview) | [快速上手](README.md) |
 | 数据分析人员 | [数据准备](https://www.grapecity.com.cn/solutions/wyn/help/docs/data-preparation) | [可视化与大屏](../01-产品能力/可视化与大屏/README.md) |
+| 财务 / 报表制作 | [创建报表](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-report) | [统计报表](../01-产品能力/统计报表/README.md) |
 | 决策或业务人员 | [仪表板](https://www.grapecity.com.cn/solutions/wyn/help/docs/create-dashboard) | [产品能力概览](../01-产品能力/README.md) |
 | 系统或数据管理人员 | [安装与部署](https://www.grapecity.com.cn/solutions/wyn/help/docs/installation-deployment) | [部署与运维](../04-部署运维/README.md) |
 
